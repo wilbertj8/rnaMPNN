@@ -8,4 +8,6 @@ echo "Running on host: $(hostname)"
 echo "We have allocated $(nproc) CPU core(s)."
 echo "Starting the CUDA test script."
 
+module load cudatoolkit/11.3
+
 python slurm_test.py
