@@ -11,7 +11,4 @@ echo "Running on host: $(hostname)"
 echo "We have allocated $(nproc) CPU core(s)."
 echo "Starting the CUDA test script."
 
-module load python/3.12.3  # Adjust as necessary to load Python with PyTorch installed
-module load cuda/12.3   # Adjust the version based on what's available on your system
-
-python test_cuda.py
+python slurm_test.py
