@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -t 4:00:00
+#SBATCH -t 00:05:00
 #SBATCH --mem=64G
 #SBATCH --gres=gpu:1
 #SBATCH -J training
