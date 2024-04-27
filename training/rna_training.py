@@ -75,21 +75,15 @@ def main(args):
 
     if PATH:
         checkpoint = torch.load(PATH, map_location=torch.device('cpu'))
-        # total_step = checkpoint['step'] #write total_step from the checkpoint
-        # epoch = checkpoint['epoch'] #write epoch from the checkpoint
-        total_step = 0
-        epoch = 0
+        total_step = checkpoint['step'] #write total_step from the checkpoint
+        epoch = checkpoint['epoch'] #write epoch from the checkpoint
         model.load_state_dict(checkpoint['model_state_dict'])
-    else:
-        total_step = 0
-        epoch = 0
 
     optimizer = get_std_opt(model.parameters(), args.hidden_dim, total_step)
 
 
     if PATH:
-        # optimizer.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-        pass
+        optimizer.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
     
     '''
     for param in model.parameters():
