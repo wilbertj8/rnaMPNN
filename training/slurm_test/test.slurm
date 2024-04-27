@@ -10,4 +10,6 @@ echo "Starting the CUDA test script."
 
 module load cudatoolkit/11.3
 
+printenv > env_output.txt
+
 python slurm_test.py
