@@ -95,10 +95,16 @@ def main(args):
             if type(xyz) != str:
                 seq_len, atoms_len, _ = xyz.shape
                 output_path = f'{args.output_path}/{name}_{letter}.pt'
+
+                # mask out Xs
+                seq = seq[0]
+                mask = [0 if char == 'X' else 1 for char in seq]
+                mask = torch.tensor(mask).unsqueeze(1).repeat(1, atoms_len)
+
                 torch.save({
                         'seq': seq[0], # str
                         'xyz': torch.from_numpy(xyz), # [seq_len, atoms_len, 3]
-                        'mask': torch.ones(seq_len, atoms_len), # [seq_len, atoms_len]
+                        'mask': mask, # [seq_len, atoms_len]
                         'bfac': torch.zeros(seq_len, atoms_len), # [seq_len, atoms_len]
                         'occ': torch.ones(seq_len, atoms_len) # [seq_len, atoms_len]
                     }, output_path)
