@@ -1,0 +1,7 @@
+Running on host: adroit-h11g2
+We have allocated 1 CPU core(s).
+Starting the CUDA test script.
+PyTorch CUDA Version: 12.1
+CUDA Available: True
+Listing CUDA Devices:
+Device 0: NVIDIA A100-PCIE-40GB

@@ -1,0 +1,40 @@
+/var/spool/slurmd/job2114046/slurm_script: line 7: activate: No such file or directory
+----------------------------------------
+chain_id_jsonl is NOT loaded
+----------------------------------------
+fixed_positions_jsonl is NOT loaded
+----------------------------------------
+pssm_jsonl is NOT loaded
+----------------------------------------
+omit_AA_jsonl is NOT loaded
+----------------------------------------
+bias_AA_jsonl is NOT loaded
+----------------------------------------
+tied_positions_jsonl is NOT loaded
+----------------------------------------
+bias by residue dictionary is not loaded, or not provided
+----------------------------------------
+discarded {'bad_chars': 0, 'too_long': 0, 'bad_seq_length': 0}
+----------------------------------------
+Number of edges: 48
+Training noise level: 0.0A
+Generating sequences for: 2LKR_3_A
+10 sequences of length 111 generated in 3.903 seconds
+Generating sequences for: 3s7c
+10 sequences of length 27 generated in 1.0932 seconds
+Generating sequences for: 3s8u
+10 sequences of length 27 generated in 1.0973 seconds
+Generating sequences for: 4rc0
+10 sequences of length 12 generated in 0.5648 seconds
+Generating sequences for: 7KUB_1_A
+10 sequences of length 60 generated in 2.2143 seconds
+Generating sequences for: 7KUD_1_A
+10 sequences of length 13 generated in 0.6354 seconds
+Generating sequences for: 7QA2_2_A
+10 sequences of length 22 generated in 0.9412 seconds
+Generating sequences for: 7RWR_1_A
+10 sequences of length 38 generated in 1.4839 seconds
+Generating sequences for: 7SHX_1_A
+10 sequences of length 94 generated in 3.3047 seconds
+Generating sequences for: 7UGA_3_A
+10 sequences of length 43 generated in 1.6207 seconds

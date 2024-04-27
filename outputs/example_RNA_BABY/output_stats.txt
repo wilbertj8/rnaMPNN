@@ -1,56 +1,17 @@
-RNA: 4rc0 (Size: 12) 
-
-Temp: 0.1
-Mean: 0.2000
-Temp: 0.2
-Mean: 0.2000
-
-AVERAGE: 0.2000
-
-RNA: 7KUD_1_A (Size: 13) 
-
-Temp: 0.1
-Mean: 0.1667
-Temp: 0.2
-Mean: 0.1667
-
-AVERAGE: 0.1667
-
 RNA: 2LKR_3_A (Size: 111) 
 
 Temp: 0.1
-Mean: 0.2455
+Mean: 0.3409
+Temp: 0.15
+Mean: 0.3182
 Temp: 0.2
-Mean: 0.2818
+Mean: 0.3773
+Temp: 0.25
+Mean: 0.3546
+Temp: 0.3
+Mean: 0.3045
 
-AVERAGE: 0.2636
-
-RNA: 7RWR_1_A (Size: 38) 
-
-Temp: 0.1
-Mean: 0.2297
-Temp: 0.2
-Mean: 0.2973
-
-AVERAGE: 0.2635
-
-RNA: 7SHX_1_A (Size: 94) 
-
-Temp: 0.1
-Mean: 0.1881
-Temp: 0.2
-Mean: 0.2097
-
-AVERAGE: 0.1989
-
-RNA: 3s7c (Size: 27) 
-
-Temp: 0.1
-Mean: 0.1923
-Temp: 0.2
-Mean: 0.2308
-
-AVERAGE: 0.2115
+AVERAGE: 0.3391
 
 RNA: 3P59_1_E-A-C-G-B-D-F-H (Size: 107) 
 
@@ -61,31 +22,139 @@ Mean: 0.2209
 
 AVERAGE: 0.2209
 
-RNA: 7QA2_2_A (Size: 22) 
+RNA: 3s7c (Size: 27) 
 
 Temp: 0.1
-Mean: 0.2381
+Mean: 0.6154
+Temp: 0.15
+Mean: 0.6154
 Temp: 0.2
-Mean: 0.1905
+Mean: 0.6154
+Temp: 0.25
+Mean: 0.6731
+Temp: 0.3
+Mean: 0.5577
 
-AVERAGE: 0.2143
-
-RNA: 7UGA_3_A (Size: 43) 
-
-Temp: 0.1
-Mean: 0.2738
-Temp: 0.2
-Mean: 0.2857
-
-AVERAGE: 0.2797
+AVERAGE: 0.6154
 
 RNA: 3s8u (Size: 27) 
 
 Temp: 0.1
-Mean: 0.2692
+Mean: 0.5769
+Temp: 0.15
+Mean: 0.5384
 Temp: 0.2
-Mean: 0.2692
+Mean: 0.5577
+Temp: 0.25
+Mean: 0.6346
+Temp: 0.3
+Mean: 0.5961
 
-AVERAGE: 0.2692
+AVERAGE: 0.5808
 
-OVERALL AVERAGE: 0.2288
+RNA: 4rc0 (Size: 12) 
+
+Temp: 0.1
+Mean: 0.2000
+Temp: 0.15
+Mean: 0.3500
+Temp: 0.2
+Mean: 0.2000
+Temp: 0.25
+Mean: 0.3500
+Temp: 0.3
+Mean: 0.3000
+
+AVERAGE: 0.2800
+
+RNA: 7KUB_1_A (Size: 60) 
+
+Temp: 0.1
+Mean: 0.3559
+Temp: 0.15
+Mean: 0.3644
+Temp: 0.2
+Mean: 0.3644
+Temp: 0.25
+Mean: 0.3559
+Temp: 0.3
+Mean: 0.2966
+
+AVERAGE: 0.3475
+
+RNA: 7KUD_1_A (Size: 13) 
+
+Temp: 0.1
+Mean: 0.3333
+Temp: 0.15
+Mean: 0.4166
+Temp: 0.2
+Mean: 0.3333
+Temp: 0.25
+Mean: 0.2916
+Temp: 0.3
+Mean: 0.3750
+
+AVERAGE: 0.3500
+
+RNA: 7QA2_2_A (Size: 22) 
+
+Temp: 0.1
+Mean: 0.5714
+Temp: 0.15
+Mean: 0.5476
+Temp: 0.2
+Mean: 0.4762
+Temp: 0.25
+Mean: 0.4762
+Temp: 0.3
+Mean: 0.4762
+
+AVERAGE: 0.5095
+
+RNA: 7RWR_1_A (Size: 38) 
+
+Temp: 0.1
+Mean: 0.4054
+Temp: 0.15
+Mean: 0.3919
+Temp: 0.2
+Mean: 0.4054
+Temp: 0.25
+Mean: 0.4189
+Temp: 0.3
+Mean: 0.3244
+
+AVERAGE: 0.3892
+
+RNA: 7SHX_1_A (Size: 94) 
+
+Temp: 0.1
+Mean: 0.4355
+Temp: 0.15
+Mean: 0.4194
+Temp: 0.2
+Mean: 0.4140
+Temp: 0.25
+Mean: 0.4194
+Temp: 0.3
+Mean: 0.4140
+
+AVERAGE: 0.4204
+
+RNA: 7UGA_3_A (Size: 43) 
+
+Temp: 0.1
+Mean: 0.4762
+Temp: 0.15
+Mean: 0.4524
+Temp: 0.2
+Mean: 0.4524
+Temp: 0.25
+Mean: 0.4643
+Temp: 0.3
+Mean: 0.4881
+
+AVERAGE: 0.4667
+
+OVERALL AVERAGE: 0.4218

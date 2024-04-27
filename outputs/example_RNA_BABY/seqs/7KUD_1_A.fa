@@ -1,10 +1,22 @@
->7KUD_1_A, score=3.8253, global_score=3.8253, fixed_chains=[], designed_chains=['A'], model_name=v_RNA, git_hash=unknown, seed=37
+>7KUD_1_A, score=1.3658, global_score=1.3658, fixed_chains=[], designed_chains=['A'], model_name=epoch_last, git_hash=7d461fbacca5795e44f7aebf80ea2389eb4d3ab4, seed=37
 GGUUUCGGGAACC
->T=0.1, sample=1, score=0.5115, global_score=0.5115, seq_recovery=0.1667
-GAAAAAAAAAAAA
->T=0.1, sample=2, score=0.4087, global_score=0.4087, seq_recovery=0.1667
-GAAAAAAAAAAAA
->T=0.2, sample=1, score=0.5351, global_score=0.5351, seq_recovery=0.1667
-GAAAAAAAAAAAA
->T=0.2, sample=2, score=0.4198, global_score=0.4198, seq_recovery=0.1667
-GAAAAAAAAAAAA
+>T=0.1, sample=1, score=0.4721, global_score=0.4721, seq_recovery=0.3333
+GGCCGGAAGGGCC
+>T=0.1, sample=2, score=0.4503, global_score=0.4503, seq_recovery=0.3333
+GGCCGGAAGGGCC
+>T=0.15, sample=1, score=0.4613, global_score=0.4613, seq_recovery=0.3333
+GGCCGGAAGGGCC
+>T=0.15, sample=2, score=0.4946, global_score=0.4946, seq_recovery=0.5000
+GGUCGGAAGGACC
+>T=0.2, sample=1, score=0.4661, global_score=0.4661, seq_recovery=0.3333
+GGCCGGAAGGGCC
+>T=0.2, sample=2, score=0.4683, global_score=0.4683, seq_recovery=0.3333
+GGCCGGAAGGGCC
+>T=0.25, sample=1, score=0.4515, global_score=0.4515, seq_recovery=0.3333
+GGCCGGAAGGGCC
+>T=0.25, sample=2, score=0.5185, global_score=0.5185, seq_recovery=0.2500
+GGCCAGAAAGGCC
+>T=0.3, sample=1, score=0.5170, global_score=0.5170, seq_recovery=0.4167
+GGGCUGAAGGCCC
+>T=0.3, sample=2, score=0.4424, global_score=0.4424, seq_recovery=0.3333
+GGCCGGAAGGGCC
