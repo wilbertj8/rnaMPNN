@@ -1,0 +1,1 @@
+epoch: 16, step: 26, time: 69.5, train: 132.768, valid: 34.555, train_acc: 0.158, valid_acc: 0.180

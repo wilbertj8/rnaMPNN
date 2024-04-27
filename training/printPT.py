@@ -24,7 +24,7 @@ def load_and_print_pt_file(file_path):
 
 if __name__ == "__main__":
     # Specify the path to your .pt file
-    pt_file_path = '/Users/wilbertjoseph/Downloads/ProteinMPNN/training/dataset/pdb/5K8H_A.pt'
+    pt_file_path = '/Users/wilbertjoseph/Downloads/ProteinMPNN/training/dataset/pdb/1A3M_A.pt'
     
     # Call the function to load and print contents
     load_and_print_pt_file(pt_file_path)

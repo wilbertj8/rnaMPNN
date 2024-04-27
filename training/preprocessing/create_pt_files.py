@@ -102,7 +102,7 @@ def main(args):
                 mask = torch.tensor(mask).unsqueeze(1).repeat(1, atoms_len)
 
                 torch.save({
-                        'seq': seq[0], # str
+                        'seq': seq, # str
                         'xyz': torch.from_numpy(xyz), # [seq_len, atoms_len, 3]
                         'mask': mask, # [seq_len, atoms_len]
                         'bfac': torch.zeros(seq_len, atoms_len), # [seq_len, atoms_len]
