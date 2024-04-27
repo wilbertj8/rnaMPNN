@@ -6,9 +6,9 @@ def main(args):
     import numpy as np
     import json
     
-    mpnn_alphabet = 'ACDEFGHIKLMNPQRSTVWYX'
+    mpnn_alphabet = 'ACGUX'
     
-    mpnn_alphabet_dict = {'A': 0,'C': 1,'D': 2,'E': 3,'F': 4,'G': 5,'H': 6,'I': 7,'K': 8,'L': 9,'M': 10,'N': 11,'P': 12,'Q': 13,'R': 14,'S': 15,'T': 16,'V': 17,'W': 18,'Y': 19,'X': 20}
+    mpnn_alphabet_dict = {'A': 0,'C': 1,'G': 2,'U': 3,'X': 4}
      
     with open(args.input_path, 'r') as json_file:
         json_list = list(json_file)   
@@ -20,7 +20,7 @@ def main(args):
         bias_by_res_dict = {}
         for chain in all_chain_list:
             chain_length = len(result[f'seq_chain_{chain}'])
-            bias_per_residue = np.zeros([chain_length, 21])
+            bias_per_residue = np.zeros([chain_length, 5])
 
 
             if chain == 'A':

@@ -61,8 +61,8 @@ def main(args):
     BATCH_COPIES = args.batch_size
     temperatures = [float(item) for item in args.sampling_temp.split()]
     omit_AAs_list = args.omit_AAs
-    alphabet = 'ACDEFGHIKLMNPQRSTVWYX'
-    alphabet_dict = dict(zip(alphabet, range(21)))    
+    alphabet = 'ACGUX'
+    alphabet_dict = dict(zip(alphabet, range(5)))    
     print_all = args.suppress_print == 0 
     omit_AAs_np = np.array([AA in omit_AAs_list for AA in alphabet]).astype(np.float32)
     device = torch.device("cuda:0" if (torch.cuda.is_available()) else "cpu")
@@ -176,9 +176,28 @@ def main(args):
         dataset_valid = StructureDataset(args.jsonl_path, truncate=None, max_length=args.max_length, verbose=print_all)
 
     checkpoint = torch.load(checkpoint_path, map_location=device) 
+
     noise_level_print = checkpoint['noise_level']
-    model = ProteinMPNN(ca_only=args.ca_only, num_letters=21, node_features=hidden_dim, edge_features=hidden_dim, hidden_dim=hidden_dim, num_encoder_layers=num_layers, num_decoder_layers=num_layers, augment_eps=args.backbone_noise, k_neighbors=checkpoint['num_edges'])
+    model = ProteinMPNN(ca_only=args.ca_only, num_letters=5, node_features=hidden_dim, edge_features=hidden_dim, hidden_dim=hidden_dim, num_encoder_layers=num_layers, num_decoder_layers=num_layers, augment_eps=args.backbone_noise, k_neighbors=checkpoint['num_edges'])
     model.to(device)
+
+    ''' CODE TO MODIFY OUTPUT LAYERS FOR RNA
+    if 'W_out.weight' in checkpoint['model_state_dict']:
+        # print(checkpoint['model_state_dict']['W_out.weight'].shape)
+        del checkpoint['model_state_dict']['W_out.weight']
+        checkpoint['model_state_dict']['W_out.weight'] = torch.nn.Parameter(torch.randn([5, model.W_out.weight.size()[1]]))
+        # print("after " + str(checkpoint['model_state_dict']['W_out.weight'].shape))
+
+    if 'W_out.bias' in checkpoint['model_state_dict']:
+        # print(checkpoint['model_state_dict']['W_out.bias'].shape)
+        del checkpoint['model_state_dict']['W_out.bias']
+        checkpoint['model_state_dict']['W_out.bias'] = torch.nn.Parameter(torch.randn([5]))
+        # print("after " + str(checkpoint['model_state_dict']['W_out.bias'].shape))
+    '''
+
+    # checkpoint_name = model_folder_path + "v_RNA.pt"
+    # torch.save(checkpoint, checkpoint_name)
+
     model.load_state_dict(checkpoint['model_state_dict'])
     model.eval()
 
@@ -223,6 +242,7 @@ def main(args):
     total_residues = 0
     protein_list = []
     total_step = 0
+    
     # Validation epoch
     with torch.no_grad():
         test_sum, test_weights = 0., 0.
@@ -345,7 +365,7 @@ def main(args):
                             for b_ix in range(BATCH_COPIES):
                                 masked_chain_length_list = masked_chain_length_list_list[b_ix]
                                 masked_list = masked_list_list[b_ix]
-                                seq_recovery_rate = torch.sum(torch.sum(torch.nn.functional.one_hot(S[b_ix], 21)*torch.nn.functional.one_hot(S_sample[b_ix], 21),axis=-1)*mask_for_loss[b_ix])/torch.sum(mask_for_loss[b_ix])
+                                seq_recovery_rate = torch.sum(torch.sum(torch.nn.functional.one_hot(S[b_ix], 5)*torch.nn.functional.one_hot(S_sample[b_ix], 5),axis=-1)*mask_for_loss[b_ix])/torch.sum(mask_for_loss[b_ix])
                                 seq = _S_to_seq(S_sample[b_ix], chain_M[b_ix])
                                 score = scores[b_ix]
                                 score_list.append(score)

@@ -1,6 +1,6 @@
 import pdbx
-from pdbx.reader.PdbxReader import PdbxReader
-from pdbx.reader.PdbxContainers import DataCategory
+from pdbx import PdbxReader
+from pdbx import DataCategory
 import gzip
 import numpy as np
 import torch
@@ -229,8 +229,8 @@ def parseAssemblies(data,chids):
         # Retrieve the operation expression for this assembly from the oper_expression attribute	
         oper_expression = assembly_gen.getValue("oper_expression", index)
 
-        oper_list = [parseOperationExpression(expression) 
-                     for expression in re.split('\(|\)', oper_expression) if expression]
+        oper_list = [parseOperationExpression(expression)
+                    for expression in re.split(r'\(|\)', oper_expression) if expression.strip()]
         
         # chain IDs which the transform should be applied to
         chains.append(assembly_gen.getValue("asym_id_list", index))

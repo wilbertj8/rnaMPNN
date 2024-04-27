@@ -1,0 +1,10 @@
+>7UGA_3_A, score=4.2354, global_score=4.2354, fixed_chains=[], designed_chains=['A'], model_name=v_RNA, git_hash=unknown, seed=37
+GGGUGUAGAAAAGUAAGGGAAACUCAAACCCCUUUCUACACCC
+>T=0.1, sample=1, score=0.4018, global_score=0.4018, seq_recovery=0.2143
+GUUAUGUGGUAGUAGGAAGUUGUGGUAUAUUUUUUAUAAGGAA
+>T=0.1, sample=2, score=0.4314, global_score=0.4314, seq_recovery=0.3333
+GUAUAAGGAGAUUUUGUGGAGGUAAGAAUUAUGUUGUAUUUUU
+>T=0.2, sample=1, score=0.4490, global_score=0.4490, seq_recovery=0.3095
+GAUUAUGGGGUUUUGUGGAUGUUAUAAAAAUAUGUUAAAAAAU
+>T=0.2, sample=2, score=0.4925, global_score=0.4925, seq_recovery=0.2619
+GGAUAAUGGUUUUAAUUUGGAGUUAUGUGGUGAUUUUGAAUAU

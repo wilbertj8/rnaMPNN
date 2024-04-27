@@ -47,7 +47,7 @@ def _scores(S, log_probs, mask):
     return scores
 
 def _S_to_seq(S, mask):
-    alphabet = 'ACDEFGHIKLMNPQRSTVWYX'
+    alphabet = 'ACGUX'
     seq = ''.join([alphabet[c] for c, m in zip(S.tolist(), mask.tolist()) if m > 0])
     return seq
 
@@ -139,7 +139,7 @@ def parse_PDB_biounits(x, atoms=['N','CA','C'], chain=None):
 def parse_PDB(path_to_pdb, input_chain_list=None, ca_only=False):
     c=0
     pdb_dict_list = []
-    init_alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G','H', 'I', 'J','K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T','U', 'V','W','X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g','h', 'i', 'j','k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't','u', 'v','w','x', 'y', 'z']
+    init_alphabet = ['A', 'C', 'G', 'U', 'X', 'a', 'c', 'g', 'u', 'x']
     extra_alphabet = [str(item) for item in list(np.arange(300))]
     chain_alphabet = init_alphabet + extra_alphabet
      
@@ -190,24 +190,24 @@ def parse_PDB(path_to_pdb, input_chain_list=None, ca_only=False):
 
 def tied_featurize(batch, device, chain_dict, fixed_position_dict=None, omit_AA_dict=None, tied_positions_dict=None, pssm_dict=None, bias_by_res_dict=None, ca_only=False):
     """ Pack and pad batch into torch tensors """
-    alphabet = 'ACDEFGHIKLMNPQRSTVWYX'
+    alphabet = 'ACGUX-'
     B = len(batch)
     lengths = np.array([len(b['seq']) for b in batch], dtype=np.int32) #sum of chain seq lengths
     L_max = max([len(b['seq']) for b in batch])
     if ca_only:
         X = np.zeros([B, L_max, 1, 3])
     else:
-        X = np.zeros([B, L_max, 4, 3])
+        X = np.zeros([B, L_max, 8, 3])
     residue_idx = -100*np.ones([B, L_max], dtype=np.int32)
     chain_M = np.zeros([B, L_max], dtype=np.int32) #1.0 for the bits that need to be predicted
     pssm_coef_all = np.zeros([B, L_max], dtype=np.float32) #1.0 for the bits that need to be predicted
-    pssm_bias_all = np.zeros([B, L_max, 21], dtype=np.float32) #1.0 for the bits that need to be predicted
-    pssm_log_odds_all = 10000.0*np.ones([B, L_max, 21], dtype=np.float32) #1.0 for the bits that need to be predicted
+    pssm_bias_all = np.zeros([B, L_max, 5], dtype=np.float32) #1.0 for the bits that need to be predicted
+    pssm_log_odds_all = 10000.0*np.ones([B, L_max, 5], dtype=np.float32) #1.0 for the bits that need to be predicted
     chain_M_pos = np.zeros([B, L_max], dtype=np.int32) #1.0 for the bits that need to be predicted
-    bias_by_res_all = np.zeros([B, L_max, 21], dtype=np.float32)
+    bias_by_res_all = np.zeros([B, L_max, 5], dtype=np.float32)
     chain_encoding_all = np.zeros([B, L_max], dtype=np.int32) #1.0 for the bits that need to be predicted
     S = np.zeros([B, L_max], dtype=np.int32)
-    omit_AA_mask = np.zeros([B, L_max, len(alphabet)], dtype=np.int32)
+    omit_AA_mask = np.zeros([B, L_max, len("ACGUX")], dtype=np.int32)
     # Build the batch
     letter_list_list = []
     visible_list_list = []
@@ -259,7 +259,7 @@ def tied_featurize(batch, device, chain_dict, fixed_position_dict=None, omit_AA_
                     if len(x_chain.shape) == 2:
                         x_chain = x_chain[:,None,:]
                 else:
-                    x_chain = np.stack([chain_coords[c] for c in [f'N_chain_{letter}', f'CA_chain_{letter}', f'C_chain_{letter}', f'O_chain_{letter}']], 1) #[chain_lenght,4,3]
+                    x_chain = np.stack([chain_coords[c] for c in [f'P_chain_{letter}', f'O5\'_chain_{letter}', f'O3\'_chain_{letter}', f'C5\'_chain_{letter}', f'C4\'_chain_{letter}', f'C3\'_chain_{letter}', f'C2\'_chain_{letter}', f'C1\'_chain_{letter}']], 1) #[chain_lenght,4,3]               
                 x_chain_list.append(x_chain)
                 chain_mask_list.append(chain_mask)
                 chain_seq_list.append(chain_seq)
@@ -270,15 +270,15 @@ def tied_featurize(batch, device, chain_dict, fixed_position_dict=None, omit_AA_
                 c+=1
                 fixed_position_mask = np.ones(chain_length)
                 fixed_position_mask_list.append(fixed_position_mask)
-                omit_AA_mask_temp = np.zeros([chain_length, len(alphabet)], np.int32)
+                omit_AA_mask_temp = np.zeros([chain_length, len("ACGUX")], np.int32)
                 omit_AA_mask_list.append(omit_AA_mask_temp)
                 pssm_coef = np.zeros(chain_length)
-                pssm_bias = np.zeros([chain_length, 21])
-                pssm_log_odds = 10000.0*np.ones([chain_length, 21])
+                pssm_bias = np.zeros([chain_length, 5])
+                pssm_log_odds = 10000.0*np.ones([chain_length, 5])
                 pssm_coef_list.append(pssm_coef)
                 pssm_bias_list.append(pssm_bias)
                 pssm_log_odds_list.append(pssm_log_odds)
-                bias_by_res_list.append(np.zeros([chain_length, 21]))
+                bias_by_res_list.append(np.zeros([chain_length, 5]))
             if letter in masked_chains:
                 masked_list.append(letter)
                 letter_list.append(letter)
@@ -294,7 +294,7 @@ def tied_featurize(batch, device, chain_dict, fixed_position_dict=None, omit_AA_
                     if len(x_chain.shape) == 2:
                         x_chain = x_chain[:,None,:]
                 else:
-                    x_chain = np.stack([chain_coords[c] for c in [f'N_chain_{letter}', f'CA_chain_{letter}', f'C_chain_{letter}', f'O_chain_{letter}']], 1) #[chain_lenght,4,3]               
+                    x_chain = np.stack([chain_coords[c] for c in [f'P_chain_{letter}', f'O5\'_chain_{letter}', f'O3\'_chain_{letter}', f'C5\'_chain_{letter}', f'C4\'_chain_{letter}', f'C3\'_chain_{letter}', f'C2\'_chain_{letter}', f'C1\'_chain_{letter}']], 1) #[chain_lenght,4,3]               
                 x_chain_list.append(x_chain)
                 chain_mask_list.append(chain_mask)
                 chain_seq_list.append(chain_seq)
@@ -309,7 +309,7 @@ def tied_featurize(batch, device, chain_dict, fixed_position_dict=None, omit_AA_
                     if fixed_pos_list:
                         fixed_position_mask[np.array(fixed_pos_list)-1] = 0.0
                 fixed_position_mask_list.append(fixed_position_mask)
-                omit_AA_mask_temp = np.zeros([chain_length, len(alphabet)], np.int32)
+                omit_AA_mask_temp = np.zeros([chain_length, len("ACGUX")], np.int32)
                 if omit_AA_dict!=None:
                     for item in omit_AA_dict[b['name']][letter]:
                         idx_AA = np.array(item[0])-1
@@ -318,8 +318,8 @@ def tied_featurize(batch, device, chain_dict, fixed_position_dict=None, omit_AA_
                         omit_AA_mask_temp[idx_[:,0], idx_[:,1]] = 1
                 omit_AA_mask_list.append(omit_AA_mask_temp)
                 pssm_coef = np.zeros(chain_length)
-                pssm_bias = np.zeros([chain_length, 21])
-                pssm_log_odds = 10000.0*np.ones([chain_length, 21])
+                pssm_bias = np.zeros([chain_length, 5])
+                pssm_log_odds = 10000.0*np.ones([chain_length, 5])
                 if pssm_dict:
                     if pssm_dict[b['name']][letter]:
                         pssm_coef = pssm_dict[b['name']][letter]['pssm_coef']
@@ -331,8 +331,7 @@ def tied_featurize(batch, device, chain_dict, fixed_position_dict=None, omit_AA_
                 if bias_by_res_dict:
                     bias_by_res_list.append(bias_by_res_dict[b['name']][letter])
                 else:
-                    bias_by_res_list.append(np.zeros([chain_length, 21]))
-
+                    bias_by_res_list.append(np.zeros([chain_length, 5]))
        
         letter_list_np = np.array(letter_list)
         tied_pos_list_of_lists = []
@@ -433,6 +432,7 @@ def tied_featurize(batch, device, chain_dict, fixed_position_dict=None, omit_AA_
         X_out = X[:,:,0]
     else:
         X_out = X
+
     return X_out, S, mask, lengths, chain_M, chain_encoding_all, letter_list_list, visible_list_list, masked_list_list, masked_chain_length_list_list, chain_M_pos, omit_AA_mask, residue_idx, dihedral_mask, tied_pos_list_of_lists_list, pssm_coef_all, pssm_bias_all, pssm_log_odds_all, bias_by_res_all, tied_beta
 
 
@@ -449,7 +449,7 @@ def loss_nll(S, log_probs, mask):
 
 def loss_smoothed(S, log_probs, mask, weight=0.1):
     """ Negative log probabilities """
-    S_onehot = torch.nn.functional.one_hot(S, 21).float()
+    S_onehot = torch.nn.functional.one_hot(S, 5).float()
 
     # Label smoothing
     S_onehot = S_onehot + weight / float(S_onehot.size(-1))
@@ -461,7 +461,7 @@ def loss_smoothed(S, log_probs, mask, weight=0.1):
 
 class StructureDataset():
     def __init__(self, jsonl_file, verbose=True, truncate=None, max_length=100,
-        alphabet='ACDEFGHIKLMNPQRSTVWYX-'):
+        alphabet='ACGUX-'):
         alphabet_set = set([a for a in alphabet])
         discard_count = {
             'bad_chars': 0,
@@ -507,6 +507,7 @@ class StructureDataset():
                     print('{} entries ({} loaded) in {:.1f} s'.format(len(self.data), i+1, elapsed))
             if verbose:
                 print('discarded', discard_count)
+
     def __len__(self):
         return len(self.data)
 
@@ -516,7 +517,7 @@ class StructureDataset():
 
 class StructureDatasetPDB():
     def __init__(self, pdb_dict_list, verbose=True, truncate=None, max_length=100,
-        alphabet='ACDEFGHIKLMNPQRSTVWYX-'):
+        alphabet='ACGUX-'):
         alphabet_set = set([a for a in alphabet])
         discard_count = {
             'bad_chars': 0,
@@ -964,43 +965,43 @@ class ProteinFeatures(nn.Module):
         if self.augment_eps > 0:
             X = X + self.augment_eps * torch.randn_like(X)
         
-        b = X[:,:,1,:] - X[:,:,0,:]
-        c = X[:,:,2,:] - X[:,:,1,:]
-        a = torch.cross(b, c, dim=-1)
-        Cb = -0.58273431*a + 0.56802827*b - 0.54067466*c + X[:,:,1,:]
-        Ca = X[:,:,1,:]
-        N = X[:,:,0,:]
-        C = X[:,:,2,:]
-        O = X[:,:,3,:]
+        P = X[:,:,0,:]
+        O3 = X[:,:,1,:]
+        O5 = X[:,:,2,:]
+        C5 = X[:,:,3,:]
+        C4 = X[:,:,4,:]
+        C3 = X[:,:,5,:]
+        C2 = X[:,:,6,:]
+        C1 = X[:,:,7,:]
  
-        D_neighbors, E_idx = self._dist(Ca, mask)
+        D_neighbors, E_idx = self._dist(P, mask)
 
         RBF_all = []
-        RBF_all.append(self._rbf(D_neighbors)) #Ca-Ca
-        RBF_all.append(self._get_rbf(N, N, E_idx)) #N-N
-        RBF_all.append(self._get_rbf(C, C, E_idx)) #C-C
-        RBF_all.append(self._get_rbf(O, O, E_idx)) #O-O
-        RBF_all.append(self._get_rbf(Cb, Cb, E_idx)) #Cb-Cb
-        RBF_all.append(self._get_rbf(Ca, N, E_idx)) #Ca-N
-        RBF_all.append(self._get_rbf(Ca, C, E_idx)) #Ca-C
-        RBF_all.append(self._get_rbf(Ca, O, E_idx)) #Ca-O
-        RBF_all.append(self._get_rbf(Ca, Cb, E_idx)) #Ca-Cb
-        RBF_all.append(self._get_rbf(N, C, E_idx)) #N-C
-        RBF_all.append(self._get_rbf(N, O, E_idx)) #N-O
-        RBF_all.append(self._get_rbf(N, Cb, E_idx)) #N-Cb
-        RBF_all.append(self._get_rbf(Cb, C, E_idx)) #Cb-C
-        RBF_all.append(self._get_rbf(Cb, O, E_idx)) #Cb-O
-        RBF_all.append(self._get_rbf(O, C, E_idx)) #O-C
-        RBF_all.append(self._get_rbf(N, Ca, E_idx)) #N-Ca
-        RBF_all.append(self._get_rbf(C, Ca, E_idx)) #C-Ca
-        RBF_all.append(self._get_rbf(O, Ca, E_idx)) #O-Ca
-        RBF_all.append(self._get_rbf(Cb, Ca, E_idx)) #Cb-Ca
-        RBF_all.append(self._get_rbf(C, N, E_idx)) #C-N
-        RBF_all.append(self._get_rbf(O, N, E_idx)) #O-N
-        RBF_all.append(self._get_rbf(Cb, N, E_idx)) #Cb-N
-        RBF_all.append(self._get_rbf(C, Cb, E_idx)) #C-Cb
-        RBF_all.append(self._get_rbf(O, Cb, E_idx)) #O-Cb
-        RBF_all.append(self._get_rbf(C, O, E_idx)) #C-O
+        RBF_all.append(self._rbf(D_neighbors)) # P-P
+        RBF_all.append(self._get_rbf(P, O5, E_idx))  # P-O5'
+        RBF_all.append(self._get_rbf(O5, C5, E_idx)) # O5'-C5'
+        RBF_all.append(self._get_rbf(C5, C4, E_idx)) # C5'-C4'
+        RBF_all.append(self._get_rbf(C4, C3, E_idx)) # C4'-C3'
+        RBF_all.append(self._get_rbf(C3, C2, E_idx)) # C3'-C2'
+        RBF_all.append(self._get_rbf(C2, C1, E_idx)) # C2'-C1'
+        RBF_all.append(self._get_rbf(C1, O5, E_idx)) # C1'-O5'
+        RBF_all.append(self._get_rbf(O3, P, E_idx))  # O3'-P
+        RBF_all.append(self._get_rbf(P, C5, E_idx))  # P-C5'
+        RBF_all.append(self._get_rbf(O5, C4, E_idx)) # O5'-C4'
+        RBF_all.append(self._get_rbf(C5, C3, E_idx)) # C5'-C3'
+        RBF_all.append(self._get_rbf(C4, C2, E_idx)) # C4'-C2'
+        RBF_all.append(self._get_rbf(C3, C1, E_idx)) # C3'-C1'
+        RBF_all.append(self._get_rbf(C2, O5, E_idx)) # C2'-O5'
+        RBF_all.append(self._get_rbf(C1, P, E_idx))  # C1'-P
+        RBF_all.append(self._get_rbf(P, C3, E_idx))  # P-C3'
+        RBF_all.append(self._get_rbf(O3, C5, E_idx)) # O3'-C5'
+        RBF_all.append(self._get_rbf(C5, C1, E_idx)) # C5'-C1'
+        RBF_all.append(self._get_rbf(C4, O5, E_idx)) # C4'-O5'
+        RBF_all.append(self._get_rbf(C3, P, E_idx))  # C3'-P
+        RBF_all.append(self._get_rbf(C2, O3, E_idx)) # C2'-O3'
+        RBF_all.append(self._get_rbf(C1, C5, E_idx)) # C1'-C5'
+        RBF_all.append(self._get_rbf(P, C2, E_idx))  # P-C2'
+        RBF_all.append(self._get_rbf(O5, C3, E_idx)) # O5'-C3'
         RBF_all = torch.cat(tuple(RBF_all), dim=-1)
 
         offset = residue_idx[:,:,None]-residue_idx[:,None,:]
@@ -1126,8 +1127,8 @@ class ProteinMPNN(nn.Module):
         mask_fw = mask_1D * (1. - mask_attend)
 
         N_batch, N_nodes = X.size(0), X.size(1)
-        log_probs = torch.zeros((N_batch, N_nodes, 21), device=device)
-        all_probs = torch.zeros((N_batch, N_nodes, 21), device=device, dtype=torch.float32)
+        log_probs = torch.zeros((N_batch, N_nodes, 5), device=device)
+        all_probs = torch.zeros((N_batch, N_nodes, 5), device=device, dtype=torch.float32)
         h_S = torch.zeros_like(h_V, device=device)
         S = torch.zeros((N_batch, N_nodes), dtype=torch.int64, device=device)
         h_V_stack = [h_V] + [torch.zeros_like(h_V, device=device) for _ in range(len(self.decoder_layers))]
@@ -1144,7 +1145,7 @@ class ProteinMPNN(nn.Module):
             t = decoding_order[:,t_] #[B]
             chain_mask_gathered = torch.gather(chain_mask, 1, t[:,None]) #[B]
             mask_gathered = torch.gather(mask, 1, t[:,None]) #[B]
-            bias_by_res_gathered = torch.gather(bias_by_res, 1, t[:,None,None].repeat(1,1,21))[:,0,:] #[B, 21]
+            bias_by_res_gathered = torch.gather(bias_by_res, 1, t[:,None,None].repeat(1,1,5))[:,0,:] #[B, 21]
             if (mask_gathered==0).all(): #for padded or missing regions only
                 S_t = torch.gather(S_true, 1, t[:,None])
             else:
@@ -1178,7 +1179,7 @@ class ProteinMPNN(nn.Module):
                     probs_masked = probs*(1.0-omit_AA_mask_gathered)
                     probs = probs_masked/torch.sum(probs_masked, dim=-1, keepdim=True) #[B, 21]
                 S_t = torch.multinomial(probs, 1)
-                all_probs.scatter_(1, t[:,None,None].repeat(1,1,21), (chain_mask_gathered[:,:,None,]*probs[:,None,:]).float())
+                all_probs.scatter_(1, t[:,None,None].repeat(1,1,5), (chain_mask_gathered[:,:,None,]*probs[:,None,:]).float())
             S_true_gathered = torch.gather(S_true, 1, t[:,None])
             S_t = (S_t*chain_mask_gathered+S_true_gathered*(1.0-chain_mask_gathered)).long()
             temp1 = self.W_s(S_t)
@@ -1223,8 +1224,8 @@ class ProteinMPNN(nn.Module):
         mask_fw = mask_1D * (1. - mask_attend)
 
         N_batch, N_nodes = X.size(0), X.size(1)
-        log_probs = torch.zeros((N_batch, N_nodes, 21), device=device)
-        all_probs = torch.zeros((N_batch, N_nodes, 21), device=device, dtype=torch.float32)
+        log_probs = torch.zeros((N_batch, N_nodes, 5), device=device)
+        all_probs = torch.zeros((N_batch, N_nodes, 5), device=device, dtype=torch.float32)
         h_S = torch.zeros_like(h_V, device=device)
         S = torch.zeros((N_batch, N_nodes), dtype=torch.int64, device=device)
         h_V_stack = [h_V] + [torch.zeros_like(h_V, device=device) for _ in range(len(self.decoder_layers))]
@@ -1316,7 +1317,7 @@ class ProteinMPNN(nn.Module):
   
         chain_M_np = chain_M.cpu().numpy()
         idx_to_loop = np.argwhere(chain_M_np[0,:]==1)[:,0]
-        log_conditional_probs = torch.zeros([X.shape[0], chain_M.shape[1], 21], device=device).float()
+        log_conditional_probs = torch.zeros([X.shape[0], chain_M.shape[1], 5], device=device).float()
 
         for idx in idx_to_loop:
             h_V = torch.clone(h_V_enc)

@@ -7,9 +7,9 @@
 
 source activate mlfold
 
-folder_with_pdbs="../inputs/PDB_monomers/pdbs/"
+folder_with_pdbs="../inputs/RNA_BABY"
 
-output_dir="../outputs/example_1_outputs"
+output_dir="../outputs/example_RNA_BABY"
 if [ ! -d $output_dir ]
 then
     mkdir -p $output_dir

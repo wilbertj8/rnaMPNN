@@ -1,0 +1,10 @@
+epoch: 1, step: 2, time: 99.9, train: 2491.111, valid: 2917.260, train_acc: 0.174, valid_acc: 0.185
+epoch: 2, step: 4, time: 85.3, train: 2308.438, valid: 2790.295, train_acc: 0.162, valid_acc: 0.191
+epoch: 3, step: 6, time: 77.8, train: 2060.758, valid: 1580.484, train_acc: 0.183, valid_acc: 0.188
+epoch: 4, step: 8, time: 77.2, train: 1787.331, valid: 1200.780, train_acc: 0.189, valid_acc: 0.183
+epoch: 5, step: 9, time: 94.0, train: 2521.905, valid: 834.975, train_acc: 0.169, valid_acc: 0.142
+epoch: 6, step: 10, time: 82.4, train: 1977.180, valid: 696.842, train_acc: 0.167, valid_acc: 0.141
+epoch: 7, step: 12, time: 72.1, train: 1203.299, valid: 995.354, train_acc: 0.177, valid_acc: 0.165
+epoch: 8, step: 14, time: 69.3, train: 934.066, valid: 624.571, train_acc: 0.178, valid_acc: 0.165
+epoch: 9, step: 15, time: 62.6, train: 1457.519, valid: 482.872, train_acc: 0.135, valid_acc: 0.172
+epoch: 10, step: 16, time: 55.9, train: 1308.158, valid: 359.225, train_acc: 0.150, valid_acc: 0.180
