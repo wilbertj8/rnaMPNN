@@ -8,7 +8,7 @@ source activate mlfold
 
 folder_with_pdbs="/scratch/network/wj9138/new_folder"
 
-output_dir="../outputs/example_RNA_BABY"
+output_dir="../outputs/example_protein_rna_complexes/"
 if [ ! -d $output_dir ]
 then
     mkdir -p $output_dir
