@@ -7,7 +7,7 @@
 
 source activate mlfold
 
-folder_with_pdbs="../inputs/RNA_BABY"
+folder_with_pdbs="../inputs/RNA_stuff"
 
 output_dir="../outputs/example_RNA_BABY"
 if [ ! -d $output_dir ]
@@ -23,8 +23,8 @@ python ../helper_scripts/parse_RNA_BABY.py --input_path=$folder_with_pdbs --outp
 python ../protein_mpnn_run.py \
         --jsonl_path $path_for_parsed_chains \
         --out_folder $output_dir \
-        --num_seq_per_target 2 \
-        --sampling_temp "0.1 0.2" \
+        --num_seq_per_target 1 \
+        --sampling_temp "0.1" \
         --seed 37 \
         --batch_size 1 \
         --model_name "v_RNA"

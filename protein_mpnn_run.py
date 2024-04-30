@@ -242,6 +242,10 @@ def main(args):
     total_residues = 0
     protein_list = []
     total_step = 0
+
+    # dict to store sequence length vs accuracy
+    accuracies = []
+    seq_lengths = []
     
     # Validation epoch
     with torch.no_grad():
@@ -421,6 +425,10 @@ def main(args):
                                 seq_rec_print = np.format_float_positional(np.float32(seq_recovery_rate.detach().cpu().numpy()), unique=False, precision=4)
                                 sample_number = j*BATCH_COPIES+b_ix+1
                                 f.write('>T={}, sample={}, score={}, global_score={}, seq_recovery={}\n{}\n'.format(temp,sample_number,score_print,global_score_print,seq_rec_print,seq)) #write generated sequence
+                                # update accuracy_vs_length
+                                total_length = X.shape[1]
+                                accuracies.append(np.float32(seq_recovery_rate.detach().cpu().numpy()))
+                                seq_lengths.append(total_length)
                 if args.save_score:
                     np.savez(score_file, score=np.array(score_list, np.float32), global_score=np.array(global_score_list, np.float32))
                 if args.save_probs:
@@ -434,6 +442,10 @@ def main(args):
                 total_length = X.shape[1]
                 if print_all:
                     print(f'{num_seqs} sequences of length {total_length} generated in {dt} seconds')
+        file = base_folder + 'accuracy_vs_length.txt'
+        with open(file, 'w') as f:
+            f.write('Accuracies: {}\n'.format(accuracies))
+            f.write('Sequence Lengths: {}\n'.format(seq_lengths))
    
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)

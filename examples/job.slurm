@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH -t 00:05:00
+#SBATCH -t 01:30:00
 #SBATCH --mem=64G
 #SBATCH --gres=gpu:1
 #SBATCH -J training
 
 source activate mlfold
 
-folder_with_pdbs="../inputs/RNA_stuff"
+folder_with_pdbs="/scratch/network/wj9138/new_folder"
 
 output_dir="../outputs/example_RNA_BABY"
 if [ ! -d $output_dir ]
@@ -22,11 +22,11 @@ python ../helper_scripts/parse_RNA_BABY.py --input_path=$folder_with_pdbs --outp
 python ../protein_mpnn_run.py \
         --jsonl_path $path_for_parsed_chains \
         --out_folder $output_dir \
-        --num_seq_per_target 2 \
-        --sampling_temp "0.1 0.15 0.2 0.25 0.3" \
+        --num_seq_per_target 1 \
+        --sampling_temp "0.1" \
         --seed 37 \
         --batch_size 1 \
-        --path_to_model_weights "../training/rna_weights/model_weights/" \
+        --path_to_model_weights "../training/rna_training_params/" \
         --model_name "epoch_last" \
 
 python ../helper_scripts/model_evaluator.py --input_path=$output_dir"/seqs" --output_path=$path_for_output_stats
